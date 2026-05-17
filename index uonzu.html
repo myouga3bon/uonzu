@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学習空間　雨温図クイズ</title>
+    <!-- グラフ描画用ライブラリ Chart.js の読み込み -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            /* 明るく親しみやすいサクラピンクを基調にしたパレット */
+            --bg-color: #fffafb;
+            --container-bg: #ffffff;
+            --primary-pink: #ffeef2;
+            --accent-pink: #ff8fa3;
+            --dark-pink: #ff4d6d;
+            --text-color: #4a3b3d;
+            --gray-text: #706062;
+            --correct-bg: #ffeef2;
+            --incorrect-bg: #eef7ff;
+            --border-color: #ffd6df;
+
+            /* 「学習空間」のカラフルな色遣い */
+            --logo-gaku: #ff9f43; /* 鮮やかなオレンジ */
+            --logo-shu: #10b981;  /* 鮮やかなエメラルドグリーン */
+            --logo-ku: #3b82f6;   /* 鮮やかなブルー */
+            --logo-kan: #ff4d6d;  /* 鮮やかなピンク */
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .container {
+            background-color: var(--container-bg);
+            border: 3px solid var(--border-color);
+            border-radius: 20px;
+            box-shadow: 0 8px 24px rgba(255, 143, 163, 0.15);
+            width: 100%;
+            max-width: 600px;
+            padding: 30px;
+            box-sizing: border-box;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* 「学習空間」ロゴ文字色 */
+        .logo-text {
+            display: inline-block;
+            font-weight: 900;
+        }
+        .logo-gaku { color: var(--logo-gaku); }
+        .logo-shu { color: var(--logo-shu); }
+        .logo-ku { color: var(--logo-ku); }
+        .logo-kan { color: var(--logo-kan); }
+
+        h1 {
+            color: var(--dark-pink);
+            font-size: 26px;
+            margin-top: 0;
+            margin-bottom: 15px;
+            border-bottom: 3px double var(--accent-pink);
+            padding-bottom: 10px;
+        }
+
+        .stage-badge {
+            display: inline-block;
+            background-color: #fff0f3;
+            border: 1px solid var(--accent-pink);
+            color: var(--dark-pink);
+            font-size: 13px;
+            font-weight: bold;
+            padding: 4px 12px;
+            border-radius: 12px;
+            margin-bottom: 5px;
+        }
+
+        p {
+            font-size: 16px;
+            line-height: 1.6;
+            margin: 0 0 15px 0;
+        }
+
+        .btn {
+            background-color: var(--accent-pink);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(255, 143, 163, 0.3);
+            transition: all 0.2s;
+            margin: 10px 5px;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background-color: var(--dark-pink);
+            transform: translateY(-2px);
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, #ffd700, #ffa500);
+            color: #4a2f00;
+            box-shadow: 0 4px 15px rgba(255, 165, 0, 0.4);
+            border: 2px solid #fff;
+        }
+
+        .hidden { display: none !important; }
+
+        /* グラフ表示エリア（縦を1.5倍に拡大、横幅はスリムに固定） */
+        .chart-container {
+            position: relative;
+            margin: 15px auto;
+            height: 375px; /* 250pxから1.5倍に拡大 */
+            width: 100%;
+            max-width: 350px;
+            border: 2px solid var(--primary-pink);
+            border-radius: 12px;
+            padding: 10px;
+            background-color: #fff;
+            box-sizing: border-box;
+        }
+
+        .average-temp-badge {
+            display: inline-block;
+            background-color: var(--primary-pink);
+            color: var(--dark-pink);
+            font-weight: bold;
+            font-size: 18px;
+            padding: 6px 16px;
+            border-radius: 20px;
+            margin-bottom: 15px;
+            border: 1px solid var(--accent-pink);
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .option-btn {
+            background-color: #fffafb;
+            color: var(--text-color);
+            border: 2px solid var(--primary-pink);
+            padding: 14px 10px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-btn:hover {
+            background-color: var(--accent-pink);
+            color: white;
+            border-color: var(--accent-pink);
+        }
+
+        .result-box {
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 24px;
+        }
+
+        .correct { background-color: var(--correct-bg); color: var(--dark-pink); border: 3px solid var(--accent-pink); }
+        .incorrect { background-color: var(--incorrect-bg); color: #2b6cb0; border: 3px solid #90cdf4; }
+
+        .main-point-box {
+            background-color: #fff2f4;
+            border: 3px dashed var(--accent-pink);
+            padding: 18px;
+            border-radius: 14px;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .main-point-title { font-size: 13px; font-weight: bold; color: var(--dark-pink); display: block; margin-bottom: 6px; }
+        .main-point-text { font-size: 20px; font-weight: bold; color: var(--dark-pink); line-height: 1.4; margin: 0; }
+
+        .explanation { background-color: #fcf8f9; border-left: 4px solid var(--accent-pink); padding: 12px 15px; text-align: left; margin-top: 15px; border-radius: 0 10px 10px 0; }
+        .explanation p { font-size: 14px; color: var(--gray-text); margin: 5px 0 0 0; line-height: 1.5; }
+
+        .confetti { position: fixed; z-index: 9999; pointer-events: none; border-radius: 2px; }
+        @keyframes fall { 0% { top: -40px; } 100% { top: 105vh; } }
+        @keyframes sway { 0% { transform: rotate(0deg) translateX(0px); } 100% { transform: rotate(360deg) translateX(40px); } }
+
+        .grand-title {
+            font-size: 32px;
+            font-weight: 900;
+            background: linear-gradient(to right, #ffa500, #ff4d6d, #4cc9f0, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: textShine 3s linear infinite;
+            margin: 20px 0;
+            display: block;
+        }
+        @keyframes textShine { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div id="start-screen">
+            <h1>
+                <span class="logo-text"><span class="logo-gaku">学</span><span class="logo-shu">習</span><span class="logo-ku">空</span><span class="logo-kan">間</span></span>　雨温図クイズ
+            </h1>
+            <p>日本の気候区分に関するクイズだよ！<br>各地の雨温図を見て、正しい気候区分をえらぼう！</p>
+            <button class="btn" onclick="startQuiz(1)">クイズをはじめる！</button>
+        </div>
+
+        <div id="quiz-screen" class="hidden">
+            <div id="stage-display" class="stage-badge">ファーストステージ</div>
+            <h1 id="question-number">第 1 問</h1>
+            <div id="average-temp" class="average-temp-badge"></div>
+            <div class="chart-container">
+                <canvas id="uonzuChart"></canvas>
+            </div>
+            <div class="options-grid" id="options-container"></div>
+        </div>
+
+        <div id="explanation-screen" class="hidden">
+            <h1>答え合わせ</h1>
+            <div id="result-judge" class="result-box"></div>
+            <p id="answer-reveal" style="font-size: 18px;"></p>
+            <div class="main-point-box">
+                <span class="main-point-title">🔥 一発で見破る最重要ポイント！</span>
+                <p id="main-point-text" class="main-point-text"></p>
+            </div>
+            <div class="explanation">
+                <strong>💡 詳しいポイント</strong>
+                <p id="explanation-text"></p>
+            </div>
+            <div style="margin-top: 20px;">
+                <button class="btn btn-gold" id="confirm-btn" onclick="confirmExplanation()">解説をちゃんと確認しました</button>
+                <button class="btn hidden" id="next-btn" onclick="nextQuestion()">次へ進む</button>
+            </div>
+        </div>
+
+        <div id="result-screen" class="hidden">
+            <h1 id="result-title">クイズクリア！</h1>
+            <div id="grand-celebration-zone"></div>
+            <p id="final-comment" style="font-size: 20px; font-weight: bold; line-height: 1.5; margin: 25px 0;"></p>
+            <div id="result-actions"></div>
+        </div>
+    </div>
+
+    <script>
+        // --- データ定義 (Stage 1 & 2) ---
+        const quizData1 = [
+            { location: "長野", climate: "中央高地の気候", temps: [-0.6, 0.2, 4.3, 11.2, 16.7, 20.6, 24.7, 25.8, 21.1, 14.5, 7.8, 1.9], precips: [50, 50, 80, 80, 90, 120, 140, 110, 140, 100, 50, 40], mainPoint: "中央高地は、１月だけ平均気温が０℃以下になる！！", explanation: "周りを山に囲まれているため降水量が少ないです。１月だけ0℃未満になるのが目印です。" },
+            { location: "旭川", climate: "北海道の気候", temps: [-7.5, -6.5, -1.8, 5.6, 12.4, 16.9, 21.0, 21.3, 16.4, 9.4, 2.2, -4.2], precips: [70, 60, 60, 50, 65, 65, 110, 130, 135, 110, 105, 90], mainPoint: "北海道は、冬（１２月〜２月）に気温が０℃以下になる！！", explanation: "冬の間、数ヶ月連続で0℃を下回るのが北海道の大きな特徴です。" },
+            { location: "新潟", climate: "日本海側の気候", temps: [2.8, 3.2, 6.3, 11.9, 17.1, 21.2, 25.3, 27.0, 22.9, 16.9, 10.8, 5.3], precips: [190, 120, 110, 90, 100, 120, 190, 140, 160, 160, 210, 220], mainPoint: "日本海側は、冬（１２月〜１月）に雨や雪が多くなる！！", explanation: "冬の季節風の影響で、12月〜1月の降水量が突出して多くなります。" },
+            { location: "東京", climate: "太平洋側の気候", temps: [5.4, 6.1, 9.4, 14.3, 18.8, 21.9, 25.7, 26.9, 23.3, 18.0, 12.5, 7.7], precips: [50, 60, 120, 130, 140, 170, 160, 150, 210, 200, 90, 60], mainPoint: "太平洋側は、夏（６月〜９月）に雨が多く、冬はとても少ない！！", explanation: "夏は多雨、冬は晴天が続くため、12月〜1月の降水量が非常に少なくなります。" },
+            { location: "高松", climate: "瀬戸内の気候", temps: [5.7, 6.1, 9.3, 14.4, 19.3, 23.0, 27.1, 28.3, 24.6, 18.8, 13.0, 8.0], precips: [40, 50, 70, 80, 90, 160, 140, 90, 160, 100, 50, 45], mainPoint: "瀬戸内は、冬も暖かい（５℃以上）のに、１年中雨が少ない！！", explanation: "山地の影響で雨が少ないですが、冬の気温は中央高地より高いです。" },
+            { location: "那覇", climate: "南西諸島の気候", temps: [17.0, 17.1, 18.9, 21.4, 24.0, 26.8, 28.9, 28.7, 27.6, 25.2, 22.1, 18.7], precips: [110, 120, 160, 160, 230, 250, 140, 240, 260, 160, 120, 110], mainPoint: "南西諸島は、１年中あたたかく、冬でも１５℃以上ある！！", explanation: "一番寒い1月でも気温が15℃以上あり、折れ線グラフが常に高い位置にあります。" }
+        ];
+
+        const quizData2 = [
+            { location: "松本", climate: "中央高地の気候", temps: [-0.1, 0.7, 4.6, 10.9, 16.5, 20.3, 24.1, 25.1, 20.9, 14.6, 8.3, 2.1], precips: [40, 45, 70, 70, 80, 110, 120, 95, 135, 110, 55, 35], mainPoint: "中央高地は、１月だけ平均気温が０℃以下になる！！", explanation: "松本も1月だけがマイナスになり、降水量も少ない典型的な中央高地型です。" },
+            { location: "稚内", climate: "北海道の気候", temps: [-4.3, -4.3, -1.0, 4.4, 9.1, 12.8, 17.1, 19.3, 16.6, 11.0, 4.1, -1.7], precips: [85, 60, 55, 50, 60, 65, 90, 115, 125, 120, 115, 105], mainPoint: "北海道は、冬（１２月〜２月）に気温が０℃以下になる！！", explanation: "12月から翌年3月まで気温が0℃を下回る、寒さの厳しい気候です。" },
+            { location: "上越", climate: "日本海側の気候", temps: [2.7, 3.1, 6.4, 12.0, 17.3, 21.0, 24.9, 26.4, 22.4, 16.7, 10.8, 5.3], precips: [390, 240, 180, 110, 100, 130, 190, 150, 190, 180, 280, 390], mainPoint: "日本海側は、冬（１２月〜１月）に雨や雪が多くなる！！", explanation: "冬の降水量が圧倒的で、棒グラフが冬に極めて高くなります。" },
+            { location: "宮崎", climate: "太平洋側の気候", temps: [7.8, 8.9, 12.1, 16.4, 20.3, 23.2, 27.3, 27.8, 25.0, 20.3, 14.9, 9.9], precips: [65, 90, 160, 210, 260, 430, 340, 360, 340, 180, 95, 65], mainPoint: "太平洋側は、夏（６月〜９月）に雨が多く、冬はとても少ない！！", explanation: "夏から秋の降水量が凄まじく、冬とのコントラストがはっきりしています。" },
+            { location: "岡山", climate: "瀬戸内の気候", temps: [4.9, 5.5, 8.8, 14.1, 19.3, 23.3, 27.3, 28.7, 24.6, 18.5, 12.3, 7.1], precips: [35, 45, 80, 90, 110, 170, 160, 90, 160, 95, 50, 45], mainPoint: "瀬戸内は、冬も暖かい（５℃以上）のに、１年中雨が少ない！！", explanation: "「晴れの国」岡山は降水量が非常に少なく、穏やかで温暖です。" },
+            { location: "石垣島", climate: "南西諸島の気候", temps: [18.9, 19.4, 21.2, 23.6, 26.2, 28.5, 29.6, 29.3, 28.2, 26.1, 23.4, 20.3], precips: [130, 140, 150, 160, 230, 200, 130, 250, 245, 170, 150, 140], mainPoint: "南西諸島は、１年中あたたかく、冬でも１５℃以上ある！！", explanation: "真冬でも平均気温が約20℃近くあり、年中亜熱帯の気候です。" }
+        ];
+
+        const climateOptions = ["北海道の気候", "日本海側の気候", "太平洋側の気候", "中央高地の気候", "瀬戸内の気候", "南西諸島の気候"];
+
+        let currentStage = 1, quizQueue = [], currentQuestionIndex = 0, myChart = null, mistakeCount = 0, isFirstTimeSuccess = true, autoTransitionTimer = null;
+
+        function shuffleArray(array) { for (let i = array.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [array[i], array[j]] = [array[j], array[i]]; } }
+
+        function playCorrectSound() {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                let osc = (freq, time) => {
+                    let o = audioCtx.createOscillator(), g = audioCtx.createGain();
+                    o.type = 'triangle'; o.frequency.setValueAtTime(freq, audioCtx.currentTime + time);
+                    g.gain.setValueAtTime(0.15, audioCtx.currentTime + time); g.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + time + 0.15);
+                    o.connect(g); g.connect(audioCtx.destination); o.start(audioCtx.currentTime + time); o.stop(audioCtx.currentTime + time + 0.15);
+                };
+                osc(523.25, 0); osc(659.25, 0.08); osc(783.99, 0.16);
+            } catch (e) {}
+        }
+
+        function startQuiz(stageNum) {
+            if (autoTransitionTimer) clearTimeout(autoTransitionTimer);
+            currentStage = stageNum;
+            document.getElementById("start-screen").classList.add("hidden");
+            document.getElementById("result-screen").classList.add("hidden");
+            document.getElementById("quiz-screen").classList.remove("hidden");
+            const baseData = (currentStage === 2) ? quizData2 : quizData1;
+            quizQueue = JSON.parse(JSON.stringify(baseData));
+            shuffleArray(quizQueue);
+            const b = document.getElementById("stage-display");
+            b.innerText = currentStage === 2 ? "セカンドステージ (高難度)" : "ファーストステージ";
+            b.style.background = currentStage === 2 ? "#fff9e6" : "#fff0f3";
+            currentQuestionIndex = 0; mistakeCount = 0; isFirstTimeSuccess = true;
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const data = quizQueue[currentQuestionIndex];
+            document.getElementById("question-number").innerText = `第 ${currentQuestionIndex + 1} 問`;
+            const avg = (data.temps.reduce((s, t) => s + t, 0) / 12).toFixed(1);
+            document.getElementById("average-temp").innerText = `年間の平均気温： ${avg} ℃`;
+            const container = document.getElementById("options-container");
+            container.innerHTML = "";
+            climateOptions.forEach(opt => {
+                const btn = document.createElement("button");
+                btn.className = "option-btn"; btn.innerText = opt;
+                btn.onclick = () => checkAnswer(opt);
+                container.appendChild(btn);
+            });
+            const ctx = document.getElementById('uonzuChart').getContext('2d');
+            if (myChart) myChart.destroy();
+            myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+                    datasets: [
+                        { label: '降水量 (mm)', data: data.precips, backgroundColor: 'rgba(89, 165, 216, 0.8)', borderColor: 'rgba(43, 108, 176, 1)', borderWidth: 1, yAxisID: 'y-precip', 
+                          barPercentage: 1.0, categoryPercentage: 1.0, order: 2 }, // 棒の間隔をゼロに設定
+                        { label: '気温 (℃)', data: data.temps, type: 'line', borderColor: '#ff4d6d', backgroundColor: '#ff4d6d', borderWidth: 3, pointRadius: 4, yAxisID: 'y-temp', order: 1 }
+                    ]
+                },
+                options: {
+                    animation: false, responsive: true, maintainAspectRatio: false,
+                    scales: {
+                        'y-temp': { type: 'linear', position: 'left', min: -10, max: 35, ticks: { stepSize: 5 } },
+                        'y-precip': { type: 'linear', position: 'right', min: 0, max: 400, grid: { drawOnChartArea: false }, ticks: { stepSize: 50 } }
+                    }
+                }
+            });
+        }
+
+        function checkAnswer(opt) {
+            const data = quizQueue[currentQuestionIndex];
+            const correct = (opt === data.climate);
+            document.getElementById("quiz-screen").classList.add("hidden");
+            document.getElementById("explanation-screen").classList.remove("hidden");
+            const judge = document.getElementById("result-judge");
+            document.getElementById("answer-reveal").innerHTML = `${data.location} は <strong>「${data.climate}」</strong> だよ！`;
+            document.getElementById("main-point-text").innerText = data.mainPoint;
+            document.getElementById("explanation-text").innerText = data.explanation;
+            const nextBtn = document.getElementById("next-btn");
+            const confBtn = document.getElementById("confirm-btn");
+            nextBtn.innerText = currentQuestionIndex === quizQueue.length - 1 ? "最終結果を見る" : "次へ進む";
+            if (correct) {
+                playCorrectSound(); judge.innerText = "⭕ 正解！"; judge.className = "result-box correct";
+                confBtn.classList.add("hidden"); nextBtn.classList.add("hidden");
+                autoTransitionTimer = setTimeout(nextQuestion, 1000);
+            } else {
+                judge.innerText = "❌ まちがい..."; judge.className = "result-box incorrect";
+                isFirstTimeSuccess = false; mistakeCount++;
+                const rem = quizQueue.slice(currentQuestionIndex + 1);
+                rem.push(JSON.parse(JSON.stringify(data)), JSON.parse(JSON.stringify(data)));
+                shuffleArray(rem);
+                quizQueue = quizQueue.slice(0, currentQuestionIndex + 1).concat(rem);
+                confBtn.classList.remove("hidden"); nextBtn.classList.add("hidden");
+            }
+        }
+
+        function confirmExplanation() { document.getElementById("confirm-btn").classList.add("hidden"); document.getElementById("next-btn").classList.remove("hidden"); }
+
+        function nextQuestion() {
+            currentQuestionIndex++; document.getElementById("explanation-screen").classList.add("hidden");
+            if (currentQuestionIndex < quizQueue.length) { document.getElementById("quiz-screen").classList.remove("hidden"); loadQuestion(); }
+            else showFinalResult();
+        }
+
+        function launchConfetti(isGrand) {
+            const count = isGrand ? 300 : 120;
+            const emojis = ['👑', '✨', '🎉', '💮', '🎖️', '⭐', '🎈'];
+            for (let i = 0; i < count; i++) {
+                const c = document.createElement('div'); c.className = 'confetti';
+                if (isGrand && Math.random() < 0.2) { c.innerText = emojis[Math.floor(Math.random() * emojis.length)]; c.style.fontSize = '24px'; }
+                else { c.style.backgroundColor = ['#ff8fa3', '#ffd166', '#4cc9f0', '#10b981'][Math.floor(Math.random() * 4)]; c.style.width = '10px'; c.style.height = '12px'; }
+                c.style.left = Math.random() * 100 + 'vw'; c.style.top = '-40px';
+                const d = Math.random() * 3 + 2;
+                c.style.animation = `fall ${d}s linear ${Math.random() * 2}s forwards, sway 2s ease-in-out infinite alternate`;
+                document.body.appendChild(c);
+                setTimeout(() => c.remove(), 5000);
+            }
+        }
+
+        function showFinalResult() {
+            document.getElementById("result-screen").classList.remove("hidden");
+            const tit = document.getElementById("result-title"), com = document.getElementById("final-comment"), act = document.getElementById("result-actions"), gran = document.getElementById("grand-celebration-zone");
+            act.innerHTML = ""; gran.innerHTML = "";
+            if (currentStage === 1) {
+                if (isFirstTimeSuccess) {
+                    tit.innerText = "ファーストステージ クリア！";
+                    com.innerHTML = `⭐ ノーミス全問正解！ ⭐<br><span style="color:var(--dark-pink); font-size:26px;">パーフェクト！素晴らしい！🎉</span><br><strong>セカンドステージ</strong>が解禁されたよ！`;
+                    launchConfetti(false);
+                    const b = document.createElement("button"); b.className = "btn btn-gold"; b.innerText = "👑 セカンドステージに挑戦！"; b.onclick = () => startQuiz(2); act.appendChild(b);
+                } else {
+                    tit.innerText = "ファーストステージ クリア！"; com.innerHTML = `全問クリア！復習バッチリだね！👍<br>ノーミス正解でセカンドステージへ進めるよ。`;
+                    const b = document.createElement("button"); b.className = "btn"; b.innerText = "もう一度挑戦してノーミスを狙う"; b.onclick = () => startQuiz(1); act.appendChild(b);
+                }
+            } else {
+                if (isFirstTimeSuccess) {
+                    tit.innerText = "完全制覇！！！"; gran.innerHTML = `<span class="grand-title">👑 グランドスラム達成 👑</span>`;
+                    com.innerHTML = `<span style="color:#ff9f43; font-size:24px; font-weight:900;">神レベル！おめでとう！💮</span><br>全ステージ完全ノーミスクリア！君は雨温図マスターだ！`;
+                    launchConfetti(true);
+                } else {
+                    tit.innerText = "セカンドステージ クリア！"; com.innerHTML = `おめでとう！難しいステージを最後までやりきったね！💪`;
+                }
+                const b = document.createElement("button"); b.className = "btn"; b.innerText = "最初の画面に戻る"; b.onclick = () => resetQuiz(); act.appendChild(b);
+            }
+        }
+
+        function resetQuiz() { document.getElementById("result-screen").classList.add("hidden"); document.getElementById("start-screen").classList.remove("hidden"); }
+    </script>
+</body>
+</html>
