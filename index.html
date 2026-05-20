@@ -32,13 +32,14 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
-            padding: 15px;
+            padding: 10px;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             overflow-x: hidden;
             position: relative;
+            box-sizing: border-box;
         }
 
         .container {
@@ -48,7 +49,7 @@
             box-shadow: 0 8px 24px rgba(255, 143, 163, 0.15);
             width: 100%;
             max-width: 500px;
-            padding: 25px 20px;
+            padding: 20px 12px;
             box-sizing: border-box;
             text-align: center;
             position: relative;
@@ -66,7 +67,7 @@
 
         h1 {
             color: var(--dark-pink);
-            font-size: 24px;
+            font-size: 22px;
             margin-top: 0;
             margin-bottom: 12px;
             border-bottom: 3px double var(--accent-pink);
@@ -86,7 +87,7 @@
         }
 
         p {
-            font-size: 15px;
+            font-size: 14px;
             line-height: 1.6;
             margin: 0 0 12px 0;
         }
@@ -96,7 +97,7 @@
             color: white;
             border: none;
             padding: 12px 28px;
-            font-size: 17px;
+            font-size: 16px;
             font-weight: bold;
             border-radius: 30px;
             cursor: pointer;
@@ -120,15 +121,15 @@
 
         .hidden { display: none !important; }
 
-        /* グラフエリア（引き出し線コメント用に横幅を他の要素と同じ最大460pxに拡大） */
+        /* グラフエリア：横幅を限界まで広げ、縦横比を崩さないよう指定 */
         .chart-container {
             position: relative;
-            height: 380px; 
             width: 100%;
-            max-width: 460px; 
+            max-width: 476px; 
+            aspect-ratio: 4 / 3; /* 出題時も解説時も常に4:3の同一比率をキープ */
             border: 2px solid var(--primary-pink);
             border-radius: 12px;
-            padding: 8px;
+            padding: 6px;
             background-color: #fff;
             box-sizing: border-box;
             margin: 10px auto;
@@ -139,7 +140,7 @@
             background-color: var(--primary-pink);
             color: var(--dark-pink);
             font-weight: bold;
-            font-size: 17px;
+            font-size: 16px;
             padding: 5px 14px;
             border-radius: 20px;
             margin-bottom: 10px;
@@ -158,7 +159,7 @@
             color: var(--text-color);
             border: 2px solid var(--primary-pink);
             padding: 12px 8px;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: bold;
             border-radius: 12px;
             cursor: pointer;
@@ -176,7 +177,7 @@
             padding: 12px;
             border-radius: 12px;
             font-weight: bold;
-            font-size: 22px;
+            font-size: 20px;
         }
 
         .correct { background-color: var(--correct-bg); color: var(--dark-pink); border: 3px solid var(--accent-pink); }
@@ -192,17 +193,17 @@
         }
 
         .main-point-title { font-size: 12px; font-weight: bold; color: var(--dark-pink); display: block; margin-bottom: 5px; }
-        .main-point-text { font-size: 18px; font-weight: bold; color: var(--dark-pink); line-height: 1.4; margin: 0; }
+        .main-point-text { font-size: 17px; font-weight: bold; color: var(--dark-pink); line-height: 1.4; margin: 0; }
 
         .explanation { background-color: #fcf8f9; border-left: 4px solid var(--accent-pink); padding: 10px 12px; text-align: left; margin-top: 10px; border-radius: 0 10px 10px 0; }
-        .explanation p { font-size: 13.5px; color: var(--gray-text); margin: 4px 0 0 0; line-height: 1.5; }
+        .explanation p { font-size: 13px; color: var(--gray-text); margin: 4px 0 0 0; line-height: 1.5; }
 
         .confetti { position: fixed; z-index: 9999; pointer-events: none; border-radius: 2px; }
         @keyframes fall { 0% { top: -40px; } 100% { top: 105vh; } }
         @keyframes sway { 0% { transform: rotate(0deg) translateX(0px); } 100% { transform: rotate(360deg) translateX(40px); } }
 
         .grand-title {
-            font-size: 28px;
+            font-size: 26px;
             font-weight: 900;
             background: linear-gradient(to right, #ffa500, #ff4d6d, #4cc9f0, #ffd700);
             -webkit-background-clip: text;
@@ -220,7 +221,7 @@
         <!-- スタート画面 -->
         <div id="start-screen">
             <h1>
-                <span class="logo-text"><span class="logo-gaku">学</span><span class="logo-shu">習</span><span class="logo-ku">空</span><span class="logo-kan">間</span></span>　雨温図クイズ
+                <span class="logo-text"><span class="logo-gaku">学</span><span class="logo-shu">舌</span><span class="logo-ku">空</span><span class="logo-kan">間</span></span>　雨温図クイズ
             </h1>
             <p>日本の気候区分に関するクイズだよ！<br>各地の雨温図を見て、正しい気候区分をえらぼう！</p>
             <button class="btn" onclick="startQuiz(1)">クイズをはじめる！</button>
@@ -362,7 +363,7 @@
                 temps: [4.9, 5.5, 8.8, 14.1, 19.3, 23.3, 27.3, 28.7, 24.6, 18.5, 12.3, 7.1], 
                 precips: [35, 45, 80, 90, 110, 170, 160, 90, 160, 95, 50, 45], 
                 mainPoint: "瀬戸内は、冬も暖かい（５℃以上）のに、１年中雨が少ない！！", 
-                explanation: "晴れの国として知られる岡山は、冬でも約5℃と暖かいにも関わらず、降水量（特に冬と夏の山）が極めて小さいです。"
+                explanation: "晴れの国として知られる岡山は、冬でも約5℃と暖かいにも関わらず、降水量（特に winter と summer の山）が極めて小さいです。"
             },
             { 
                 location: "石垣島", 
@@ -425,7 +426,7 @@
                 const yTemp = chart.scales['y-temp'];
                 const yPrecip = chart.scales['y-precip'];
                 const climateType = opts.type;
-                const textX = chart.width - 110; // 右余白スペースにテキストを描く基準X座標
+                const textX = chart.width - 100; // 幅を広げた分、文字の描画位置を外側に調整
 
                 ctx.save();
                 ctx.font = 'bold 11px sans-serif';
@@ -434,29 +435,27 @@
                 const drawLabelText = (text, x, y, bgCol, textCol) => {
                     ctx.fillStyle = bgCol;
                     ctx.beginPath();
-                    ctx.roundRect(x - 5, y - 9, 110, 18, 4);
+                    ctx.roundRect(x - 5, y - 9, 102, 18, 4);
                     ctx.fill();
                     ctx.fillStyle = textCol;
                     ctx.fillText(text, x, y);
                 };
 
-                // 1. 中央高地 & 瀬戸内海の「150mmライン（薄い水色の太い実線）」
+                // 1. 中央高地 & 瀬戸内海の「150mmライン」
                 if (climateType === "中央高地の気候" || climateType === "瀬戸内の気候") {
                     const y150 = yPrecip.getPixelForValue(150);
                     ctx.beginPath();
-                    ctx.strokeStyle = '#38bdf8'; // 薄い水色 (Sky-400)
+                    ctx.strokeStyle = '#38bdf8'; 
                     ctx.lineWidth = 3.5;
                     ctx.moveTo(xAxis.left, y150);
                     ctx.lineTo(xAxis.right, y150);
                     ctx.stroke();
 
-                    // 薄い水色の線の延長線上で、右の余白にコメントを描画
                     drawLabelText("150mmで少ない！", textX, y150, '#e0f2fe', '#0284c7');
                 }
 
                 // 2. 各気候に対応する丸囲みと、余白からの引き出し矢印・テキスト
                 if (climateType === "中央高地の気候") {
-                    // 1月の気温 (プロットindex: 0)
                     const xJan = xAxis.getPixelForValue(0);
                     const yVal = yTemp.getPixelForValue(chart.data.datasets[1].data[0]);
 
@@ -466,12 +465,11 @@
                     ctx.lineWidth = 3;
                     ctx.stroke();
 
-                    const lblY = yVal - 20 < 40 ? yVal + 30 : yVal - 25;
+                    const lblY = (40 > yVal - 20) ? yVal + 30 : yVal - 25;
                     drawLabelText("１月だけ０℃以下！", textX, lblY, '#ffe4e6', '#9f1239');
                     drawArrow(ctx, textX - 8, lblY, xJan + 12, yVal - 8, '#ff4d6d');
                 } 
                 else if (climateType === "瀬戸内の気候") {
-                    // 1月の気温 (プロットindex: 0)
                     const xJan = xAxis.getPixelForValue(0);
                     const yVal = yTemp.getPixelForValue(chart.data.datasets[1].data[0]);
 
@@ -486,7 +484,6 @@
                     drawArrow(ctx, textX - 8, lblY, xJan + 12, yVal + 6, '#ff4d6d');
                 }
                 else if (climateType === "北海道の気候") {
-                    // 0℃ラインの点線
                     const y0 = yTemp.getPixelForValue(0);
                     ctx.beginPath();
                     ctx.strokeStyle = '#3b82f6';
@@ -499,7 +496,6 @@
 
                     drawLabelText("気温０℃のライン", textX, y0, '#dbeafe', '#1e40af');
 
-                    // 冬（12月=11, 1月=0, 2月=1）の赤丸
                     const targetIndices = [11, 0, 1];
                     ctx.strokeStyle = '#ff4d6d';
                     ctx.lineWidth = 2.5;
@@ -518,7 +514,6 @@
                     drawArrow(ctx, textX - 8, lblY, xJan + 12, yJan - 10, '#ff4d6d');
                 }
                 else if (climateType === "日本海側の気候") {
-                    // 12月(11)と1月(0)の降水量棒の強調赤枠
                     const xDec = xAxis.getPixelForValue(11);
                     const xJan = xAxis.getPixelForValue(0);
                     const yDec = yPrecip.getPixelForValue(chart.data.datasets[0].data[11]);
@@ -535,7 +530,6 @@
                     drawArrow(ctx, textX - 8, lblY, xJan + 14, yJan + 5, '#ff4d6d');
                 }
                 else if (climateType === "太平洋側の気候") {
-                    // 冬（12月・1月）の極低降水量枠
                     const xDec = xAxis.getPixelForValue(11);
                     const xJan = xAxis.getPixelForValue(0);
                     const yDec = yPrecip.getPixelForValue(chart.data.datasets[0].data[11]);
@@ -551,7 +545,6 @@
                     drawLabelText("冬に雨が少ない！", textX, lblY1, '#dbeafe', '#1e40af');
                     drawArrow(ctx, textX - 8, lblY1, xJan + 14, yJan + 4, '#3b82f6');
 
-                    // 夏（7月=6）の降水量の山を強調
                     const xJul = xAxis.getPixelForValue(6);
                     const yJul = yPrecip.getPixelForValue(chart.data.datasets[0].data[6]);
 
@@ -566,7 +559,6 @@
                     drawArrow(ctx, textX - 8, lblY2, xJul + 14, yJul, '#ff4d6d');
                 }
                 else if (climateType === "南西諸島の気候") {
-                    // 15℃線
                     const y15 = yTemp.getPixelForValue(15);
                     ctx.beginPath();
                     ctx.strokeStyle = '#ff4d6d';
@@ -579,7 +571,6 @@
 
                     drawLabelText("基準の１５℃ライン", textX, y15, '#ffe4e6', '#9f1239');
 
-                    // 1月のプロット
                     const xJan = xAxis.getPixelForValue(0);
                     const yJan = yTemp.getPixelForValue(chart.data.datasets[1].data[0]);
                     const lblY = yJan - 25;
@@ -649,7 +640,7 @@
                     animation: false, responsive: true, maintainAspectRatio: false,
                     layout: {
                         padding: {
-                            right: 125, // アノテーション用右余白
+                            right: 110, // 出題時・解説時に関わらず、最初から余白幅を共通に固定（グラフ本体の伸縮を防ぐ）
                             top: 15,
                             left: 5,
                             bottom: 5
@@ -675,7 +666,7 @@
             const data = quizQueue[currentQuestionIndex];
             const correct = (opt === data.climate);
 
-            // アノテーション（丸や引き出し線）をグラフに動的に反映
+            // アノテーションをグラフに反映（アスペクト比やパディングは同一のまま！）
             myChart.options.plugins.customAnnotation = {
                 enabled: true,
                 type: data.climate
@@ -706,7 +697,6 @@
                 judge.className = "result-box incorrect";
                 isFirstTimeSuccess = false; mistakeCount++;
                 
-                // おかわり再登録システム（間違えた問題をあとで2回ランダムにリベンジ出題）
                 const rem = quizQueue.slice(currentQuestionIndex + 1);
                 rem.push(JSON.parse(JSON.stringify(data)), JSON.parse(JSON.stringify(data)));
                 shuffleArray(rem);
@@ -724,7 +714,7 @@
 
         function nextQuestion() {
             currentQuestionIndex++; 
-            if (currentQuestionIndex < quizQueue.length) { 
+            if (quizQueue.length > currentQuestionIndex) { 
                 loadQuestion(); 
             } else {
                 showFinalResult();
@@ -736,7 +726,7 @@
             const emojis = ['👑', '✨', '🎉', '💮', '🎖️', '⭐', '🎈'];
             for (let i = 0; i < count; i++) {
                 const c = document.createElement('div'); c.className = 'confetti';
-                if (isGrand && Math.random() < 0.25) { 
+                if (isGrand && 0.25 > Math.random()) { 
                     c.innerText = emojis[Math.floor(Math.random() * emojis.length)]; 
                     c.style.fontSize = '24px'; 
                 } else { 
