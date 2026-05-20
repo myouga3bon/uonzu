@@ -49,7 +49,7 @@
             box-shadow: 0 8px 24px rgba(255, 143, 163, 0.15);
             width: 100%;
             max-width: 500px;
-            padding: 20px 12px;
+            padding: 15px 12px;
             box-sizing: border-box;
             text-align: center;
             position: relative;
@@ -74,16 +74,15 @@
             padding-bottom: 8px;
         }
 
-        .stage-badge {
-            display: inline-block;
-            background-color: #fff0f3;
-            border: 1px solid var(--accent-pink);
+        /* 問題ページ専用の見出し */
+        .question-heading {
             color: var(--dark-pink);
-            font-size: 13px;
+            font-size: 24px;
             font-weight: bold;
-            padding: 4px 12px;
-            border-radius: 12px;
-            margin-bottom: 8px;
+            margin-top: 0;
+            margin-bottom: 10px;
+            border-bottom: 3px double var(--accent-pink);
+            padding-bottom: 6px;
         }
 
         p {
@@ -121,18 +120,18 @@
 
         .hidden { display: none !important; }
 
-        /* グラフエリア：横幅を限界まで広げ、縦横比を崩さないよう指定 */
+        /* グラフエリア：常に4:2.9の同一比率をキープ */
         .chart-container {
             position: relative;
             width: 100%;
             max-width: 476px; 
-            aspect-ratio: 4 / 3; /* 出題時も解説時も常に4:3の同一比率をキープ */
+            aspect-ratio: 4 / 2.9; 
             border: 2px solid var(--primary-pink);
             border-radius: 12px;
             padding: 6px;
             background-color: #fff;
             box-sizing: border-box;
-            margin: 10px auto;
+            margin: 5px auto;
         }
 
         .average-temp-badge {
@@ -143,7 +142,8 @@
             font-size: 16px;
             padding: 5px 14px;
             border-radius: 20px;
-            margin-bottom: 10px;
+            margin-top: 2px;
+            margin-bottom: 5px;
             border: 1px solid var(--accent-pink);
         }
 
@@ -151,7 +151,7 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 10px;
-            margin-top: 15px;
+            margin-top: 10px;
         }
 
         .option-btn {
@@ -173,8 +173,8 @@
         }
 
         .result-box {
-            margin: 10px 0;
-            padding: 12px;
+            margin: 8px 0;
+            padding: 10px;
             border-radius: 12px;
             font-weight: bold;
             font-size: 20px;
@@ -186,17 +186,60 @@
         .main-point-box {
             background-color: #fff2f4;
             border: 3px dashed var(--accent-pink);
-            padding: 15px;
+            padding: 12px;
             border-radius: 14px;
-            margin: 15px 0;
-            text-align: left;
+            margin: 10px 0;
+            text-align: center;
         }
 
-        .main-point-title { font-size: 12px; font-weight: bold; color: var(--dark-pink); display: block; margin-bottom: 5px; }
-        .main-point-text { font-size: 17px; font-weight: bold; color: var(--dark-pink); line-height: 1.4; margin: 0; }
+        .main-point-title { 
+            font-size: 15px; 
+            font-weight: 900; 
+            color: var(--dark-pink); 
+            display: block; 
+            margin-bottom: 8px; 
+            text-align: left;
+        }
+        
+        /* 1行に入るぎりぎりの大きさ（19px）までフォントサイズをアップ */
+        .point-flow {
+            font-size: 19px;
+            font-weight: bold;
+            color: var(--dark-pink);
+            line-height: 1.4;
+            margin: 0 auto 8px auto;
+            white-space: nowrap; /* 画面幅が狭くても絶対に途中で改行させない */
+        }
 
-        .explanation { background-color: #fcf8f9; border-left: 4px solid var(--accent-pink); padding: 10px 12px; text-align: left; margin-top: 10px; border-radius: 0 10px 10px 0; }
-        .explanation p { font-size: 13px; color: var(--gray-text); margin: 4px 0 0 0; line-height: 1.5; }
+        /* 気候名称の結論デザイン */
+        .point-conclusion {
+            font-size: 26px;
+            font-weight: 900;
+            color: var(--dark-pink);
+            display: inline-block;
+            margin-bottom: 4px;
+        }
+
+        /* 都市名のデザイン（明るい青） */
+        .point-location {
+            font-size: 18px;
+            font-weight: bold;
+            color: #00b4d8; 
+            margin: 0;
+            display: block;
+        }
+
+        .explanation { background-color: #fcf8f9; border-left: 4px solid var(--accent-pink); padding: 8px 10px; text-align: left; margin-top: 8px; border-radius: 0 10px 10px 0; }
+        
+        .explanation strong {
+            font-size: 12.5px;
+        }
+        .explanation p { 
+            font-size: 12px; 
+            color: var(--gray-text); 
+            margin: 3px 0 0 0; 
+            line-height: 1.5; 
+        }
 
         .confetti { position: fixed; z-index: 9999; pointer-events: none; border-radius: 2px; }
         @keyframes fall { 0% { top: -40px; } 100% { top: 105vh; } }
@@ -221,7 +264,7 @@
         <!-- スタート画面 -->
         <div id="start-screen">
             <h1>
-                <span class="logo-text"><span class="logo-gaku">学</span><span class="logo-shu">舌</span><span class="logo-ku">空</span><span class="logo-kan">間</span></span>　雨温図クイズ
+                <span class="logo-text"><span class="logo-gaku">学</span><span class="logo-shu">習</span><span class="logo-ku">空</span><span class="logo-kan">間</span></span>　雨温図クイズ
             </h1>
             <p>日本の気候区分に関するクイズだよ！<br>各地の雨温図を見て、正しい気候区分をえらぼう！</p>
             <button class="btn" onclick="startQuiz(1)">クイズをはじめる！</button>
@@ -229,8 +272,10 @@
 
         <!-- クイズ・解説画面 -->
         <div id="quiz-screen" class="hidden">
-            <div id="stage-display" class="stage-badge">ファーストステージ</div>
-            <h1 id="question-number">第 1 問</h1>
+            <!-- 大きくて太いピンクの問題番号見出し（問題ページにのみ出現） -->
+            <h1 id="question-heading" class="question-heading"></h1>
+            
+            <!-- 年間平均気温バッジ -->
             <div id="average-temp" class="average-temp-badge"></div>
             
             <div class="chart-container">
@@ -245,16 +290,15 @@
                 <!-- 解説・結果表示エリア（同じ画面のすぐ下部に出現） -->
                 <div id="explanation-area" class="hidden">
                     <div id="result-judge" class="result-box"></div>
-                    <p id="answer-reveal" style="font-size: 16px; margin-bottom: 10px;"></p>
                     <div class="main-point-box">
-                        <span class="main-point-title">🔥 一発で見破る最重要ポイント！</span>
-                        <p id="main-point-text" class="main-point-text"></p>
+                        <span class="main-point-title">🔥 一発みやぶりポイント！！</span>
+                        <div id="main-point-container"></div>
                     </div>
                     <div class="explanation">
                         <strong>💡 詳しいポイント</strong>
                         <p id="explanation-text"></p>
                     </div>
-                    <div style="margin-top: 15px;">
+                    <div style="margin-top: 12px;">
                         <button class="btn btn-gold" id="confirm-btn" onclick="confirmExplanation()">解説をちゃんと確認しました</button>
                         <button class="btn hidden" id="next-btn" onclick="nextQuestion()">次へ進む</button>
                     </div>
@@ -273,13 +317,15 @@
 
     <script>
         // --- データ定義 (Stage 1 & 2) ---
+        // 「〜の気候」の形にすべて復元しました
         const quizData1 = [
             { 
                 location: "長野", 
                 climate: "中央高地の気候", 
                 temps: [-0.6, 0.2, 4.3, 11.2, 16.7, 20.6, 24.7, 25.8, 21.1, 14.5, 7.8, 1.9], 
                 precips: [50, 50, 80, 80, 90, 120, 140, 110, 140, 100, 50, 40], 
-                mainPoint: "中央高地は、１月だけ平均気温が０℃以下になる！！", 
+                featureText: "１月だけ平均気温が０℃以下になる！",
+                conclusionText: "中央高地の気候", 
                 explanation: "周りを高い山に囲まれているため、水分が入り込まず一年中降水量が少ないです。さらに１月だけ0℃未満になるのが目印です。"
             },
             { 
@@ -287,7 +333,8 @@
                 climate: "北海道の気候", 
                 temps: [-7.5, -6.5, -1.8, 5.6, 12.4, 16.9, 21.0, 21.3, 16.4, 9.4, 2.2, -4.2], 
                 precips: [70, 60, 60, 50, 65, 65, 110, 130, 135, 110, 105, 90], 
-                mainPoint: "北海道は、冬（１２月〜２月）に気温が０℃以下になる！！", 
+                featureText: "冬（１月も１２月も）気温が０℃以下になる！",
+                conclusionText: "北海道の気候",
                 explanation: "冬の間、数ヶ月連続で平均気温が0℃を下回るのが、北海道気候の決定的な特徴です。"
             },
             { 
@@ -295,7 +342,8 @@
                 climate: "日本海側の気候", 
                 temps: [2.8, 3.2, 6.3, 11.9, 17.1, 21.2, 25.3, 27.0, 22.9, 16.9, 10.8, 5.3], 
                 precips: [190, 120, 110, 90, 100, 120, 190, 140, 160, 160, 210, 220], 
-                mainPoint: "日本海側は、冬（１２月〜１月）に雨や雪が多くなる！！", 
+                featureText: "冬（１２月〜１月）に雨や雪が多くなる！",
+                conclusionText: "日本海側の気候",
                 explanation: "冬に吹く湿った季節風が山脈にぶつかるため、12月〜1月の降水量が突出して多く（棒グラフが高く）なります。"
             },
             { 
@@ -303,7 +351,8 @@
                 climate: "太平洋側の気候", 
                 temps: [5.4, 6.1, 9.4, 14.3, 18.8, 21.9, 25.7, 26.9, 23.3, 18.0, 12.5, 7.7], 
                 precips: [50, 60, 120, 130, 140, 170, 160, 150, 210, 200, 90, 60], 
-                mainPoint: "太平洋側は、夏（６月〜９月）に雨が多く、冬はとても少ない！！", 
+                featureText: "夏に雨が多く、冬はとても少なくなる！",
+                conclusionText: "太平洋側の気候",
                 explanation: "夏は太平洋からの季節風で雨が多くなり、冬は乾燥して晴れるため降水量が極端に少なくなります。"
             },
             { 
@@ -311,7 +360,8 @@
                 climate: "瀬戸内の気候", 
                 temps: [5.7, 6.1, 9.3, 14.4, 19.3, 23.0, 27.1, 28.3, 24.6, 18.8, 13.0, 8.0], 
                 precips: [40, 50, 70, 80, 90, 160, 140, 90, 160, 100, 50, 45], 
-                mainPoint: "瀬戸内は、冬も暖かい（５℃以上）のに、１年中雨が少ない！！", 
+                featureText: "冬も暖かいのに１年中ずっと雨が少ない！",
+                conclusionText: "瀬戸内の気候",
                 explanation: "四国・中国の山地に挟まれて雨雲が届きにくいため、降水量が常に少ないですが、中央高地と違って冬も温和です。"
             },
             { 
@@ -319,7 +369,8 @@
                 climate: "南西諸島の気候", 
                 temps: [17.0, 17.1, 18.9, 21.4, 24.0, 26.8, 28.9, 28.7, 27.6, 25.2, 22.1, 18.7], 
                 precips: [110, 120, 160, 160, 230, 250, 140, 240, 260, 160, 120, 110], 
-                mainPoint: "南西諸島は、１年中あたたかく、冬でも１５℃以上ある！！", 
+                featureText: "１年中あたたかく冬でも１５℃以上ある！",
+                conclusionText: "南西諸島の気候",
                 explanation: "最も気温が下がる1月でも15℃を余裕で超えており、気温の折れ線グラフが常に非常に高い位置にあります。"
             }
         ];
@@ -330,7 +381,8 @@
                 climate: "中央高地の気候", 
                 temps: [-0.1, 0.7, 4.6, 10.9, 16.5, 20.3, 24.1, 25.1, 20.9, 14.6, 8.3, 2.1], 
                 precips: [40, 45, 70, 70, 80, 110, 120, 95, 135, 110, 55, 35], 
-                mainPoint: "中央高地は、１月だけ平均気温が０℃以下になる！！", 
+                featureText: "１月だけ平均気温が０℃以下（氷点下）になる！",
+                conclusionText: "中央高地の気候",
                 explanation: "松本も1月のみがわずかに氷点下（-0.1℃）となり、降水量の山が非常に低い中央高地の気候です。"
             },
             { 
@@ -338,7 +390,8 @@
                 climate: "北海道の気候", 
                 temps: [-4.3, -4.3, -1.0, 4.4, 9.1, 12.8, 17.1, 19.3, 16.6, 11.0, 4.1, -1.7], 
                 precips: [85, 60, 55, 50, 60, 65, 90, 115, 125, 120, 115, 105], 
-                mainPoint: "北海道は、冬（１２月〜２月）に気温が０℃以下になる！！", 
+                featureText: "冬（１月も１２月も）気温が０℃以下になる！",
+                conclusionText: "北海道の気候",
                 explanation: "稚内は冬の寒さが特に長く続き、12月から3月までずっと0℃を下回る寒冷な気候をもちます。"
             },
             { 
@@ -346,7 +399,8 @@
                 climate: "日本海側の気候", 
                 temps: [2.7, 3.1, 6.4, 12.0, 17.3, 21.0, 24.9, 26.4, 22.4, 16.7, 10.8, 5.3], 
                 precips: [390, 240, 180, 110, 100, 130, 190, 150, 190, 180, 280, 390], 
-                mainPoint: "日本海側は、冬（１２月〜１月）に雨や雪が多くなる！！", 
+                featureText: "冬（１２月・１月）の降水量が圧倒的に多い！",
+                conclusionText: "日本海側の気候",
                 explanation: "新潟県の上越は日本屈指の豪雪地帯であり、12月と1月の降水量が約400mmに達するほど圧倒的です。"
             },
             { 
@@ -354,7 +408,8 @@
                 climate: "太平洋側の気候", 
                 temps: [7.8, 8.9, 12.1, 16.4, 20.3, 23.2, 27.3, 27.8, 25.0, 20.3, 14.9, 9.9], 
                 precips: [65, 90, 160, 210, 260, 430, 340, 360, 340, 180, 95, 65], 
-                mainPoint: "太平洋側は、夏（６月〜９月）に雨が多く、冬はとても少ない！！", 
+                featureText: "夏の梅雨や台風の時期に雨が極端に多くなる！",
+                conclusionText: "太平洋側の気候",
                 explanation: "夏の梅雨や台風の時期に極端に雨が多く、それに対して冬はカラッと晴れて雨がほとんど降りません。"
             },
             { 
@@ -362,7 +417,8 @@
                 climate: "瀬戸内の気候", 
                 temps: [4.9, 5.5, 8.8, 14.1, 19.3, 23.3, 27.3, 28.7, 24.6, 18.5, 12.3, 7.1], 
                 precips: [35, 45, 80, 90, 110, 170, 160, 90, 160, 95, 50, 45], 
-                mainPoint: "瀬戸内は、冬も暖かい（５℃以上）のに、１年中雨が少ない！！", 
+                featureText: "冬も暖かいのに１年中雨の山がとても低い！",
+                conclusionText: "瀬戸内の気候",
                 explanation: "晴れの国として知られる岡山は、冬でも約5℃と暖かいにも関わらず、降水量（特に winter と summer の山）が極めて小さいです。"
             },
             { 
@@ -370,12 +426,19 @@
                 climate: "南西諸島の気候", 
                 temps: [18.9, 19.4, 21.2, 23.6, 26.2, 28.5, 29.6, 29.3, 28.2, 26.1, 23.4, 20.3], 
                 precips: [130, 140, 150, 160, 230, 200, 130, 250, 245, 170, 150, 140], 
-                mainPoint: "南西諸島は、１年中あたたかく、冬でも１５℃以上ある！！", 
+                featureText: "真冬でも２０℃に迫るほど１年中あたたかい！",
+                conclusionText: "南西諸島の気候",
                 explanation: "沖縄の石垣島は、真冬でも平均気温が20℃に迫る、まさに常夏の気候区分です。"
             }
         ];
 
         const climateOptions = ["北海道の気候", "日本海側の気候", "太平洋側の気候", "中央高地の気候", "瀬戸内の気候", "南西諸島の気候"];
+
+        // グラフ横軸の日本語縦書きデータ
+        const verticalMonths = [
+            ['１', '月'], ['２', '月'], ['３', '月'], ['４', '月'], ['５', '月'], ['６', '月'],
+            ['７', '月'], ['８', '月'], ['９', '月'], ['10', '月'], ['11', '月'], ['12', '月']
+        ];
 
         let currentStage = 1, quizQueue = [], currentQuestionIndex = 0, myChart = null, mistakeCount = 0, isFirstTimeSuccess = true, autoTransitionTimer = null;
 
@@ -426,7 +489,7 @@
                 const yTemp = chart.scales['y-temp'];
                 const yPrecip = chart.scales['y-precip'];
                 const climateType = opts.type;
-                const textX = chart.width - 100; // 幅を広げた分、文字の描画位置を外側に調整
+                const textX = chart.width - 100; 
 
                 ctx.save();
                 ctx.font = 'bold 11px sans-serif';
@@ -441,7 +504,6 @@
                     ctx.fillText(text, x, y);
                 };
 
-                // 1. 中央高地 & 瀬戸内海の「150mmライン」
                 if (climateType === "中央高地の気候" || climateType === "瀬戸内の気候") {
                     const y150 = yPrecip.getPixelForValue(150);
                     ctx.beginPath();
@@ -451,10 +513,9 @@
                     ctx.lineTo(xAxis.right, y150);
                     ctx.stroke();
 
-                    drawLabelText("150mmで少ない！", textX, y150, '#e0f2fe', '#0284c7');
+                    drawLabelText("150mmで少ない！", textX, y150 - 15, '#e0f2fe', '#0284c7');
                 }
 
-                // 2. 各気候に対応する丸囲みと、余白からの引き出し矢印・テキスト
                 if (climateType === "中央高地の気候") {
                     const xJan = xAxis.getPixelForValue(0);
                     const yVal = yTemp.getPixelForValue(chart.data.datasets[1].data[0]);
@@ -465,7 +526,7 @@
                     ctx.lineWidth = 3;
                     ctx.stroke();
 
-                    const lblY = (40 > yVal - 20) ? yVal + 30 : yVal - 25;
+                    const lblY = (40 > yVal - 20) ? yVal + 35 : yVal - 30;
                     drawLabelText("１月だけ０℃以下！", textX, lblY, '#ffe4e6', '#9f1239');
                     drawArrow(ctx, textX - 8, lblY, xJan + 12, yVal - 8, '#ff4d6d');
                 } 
@@ -479,7 +540,7 @@
                     ctx.lineWidth = 3;
                     ctx.stroke();
 
-                    const lblY = yVal + 25;
+                    const lblY = yVal + 35; 
                     drawLabelText("冬も暖かい(5℃以上)", textX, lblY, '#ffe4e6', '#9f1239');
                     drawArrow(ctx, textX - 8, lblY, xJan + 12, yVal + 6, '#ff4d6d');
                 }
@@ -494,7 +555,7 @@
                     ctx.stroke();
                     ctx.setLineDash([]);
 
-                    drawLabelText("気温０℃のライン", textX, y0, '#dbeafe', '#1e40af');
+                    drawLabelText("気温０℃のライン", textX, y0 - 15, '#dbeafe', '#1e40af'); 
 
                     const targetIndices = [11, 0, 1];
                     ctx.strokeStyle = '#ff4d6d';
@@ -509,9 +570,9 @@
 
                     const xJan = xAxis.getPixelForValue(0);
                     const yJan = yTemp.getPixelForValue(chart.data.datasets[1].data[0]);
-                    const lblY = yJan - 28;
+                    const lblY = yJan + 30; 
                     drawLabelText("冬に０℃以下になる", textX, lblY, '#ffe4e6', '#9f1239');
-                    drawArrow(ctx, textX - 8, lblY, xJan + 12, yJan - 10, '#ff4d6d');
+                    drawArrow(ctx, textX - 8, lblY, xJan + 12, yJan + 10, '#ff4d6d');
                 }
                 else if (climateType === "日本海側の気候") {
                     const xDec = xAxis.getPixelForValue(11);
@@ -525,7 +586,7 @@
                     ctx.strokeRect(xDec - 12, yDec - 6, 24, yBase - yDec + 12);
                     ctx.strokeRect(xJan - 12, yJan - 6, 24, yBase - yJan + 12);
 
-                    const lblY = yJan - 25;
+                    const lblY = yJan - 30;
                     drawLabelText("冬に雨や雪が多い！", textX, lblY, '#ffe4e6', '#9f1239');
                     drawArrow(ctx, textX - 8, lblY, xJan + 14, yJan + 5, '#ff4d6d');
                 }
@@ -541,7 +602,7 @@
                     ctx.strokeRect(xDec - 12, yDec - 4, 24, yBase - yDec + 8);
                     ctx.strokeRect(xJan - 12, yJan - 4, 24, yBase - yJan + 8);
                     
-                    const lblY1 = yJan - 15;
+                    const lblY1 = yJan - 35; 
                     drawLabelText("冬に雨が少ない！", textX, lblY1, '#dbeafe', '#1e40af');
                     drawArrow(ctx, textX - 8, lblY1, xJan + 14, yJan + 4, '#3b82f6');
 
@@ -554,26 +615,26 @@
                     ctx.lineWidth = 2.5;
                     ctx.stroke();
 
-                    const lblY2 = yJul - 20;
+                    const lblY2 = yJul + 25; 
                     drawLabelText("夏に雨が多い！", textX, lblY2, '#ffe4e6', '#9f1239');
-                    drawArrow(ctx, textX - 8, lblY2, xJul + 14, yJul, '#ff4d6d');
+                    drawArrow(ctx, textX - 8, lblY2, xJul + 14, yJul + 10, '#ff4d6d');
                 }
                 else if (climateType === "南西諸島の気候") {
-                    const y15 = yTemp.getPixelForValue(15);
+                    const y15Real = yTemp.getPixelForValue(15);
                     ctx.beginPath();
                     ctx.strokeStyle = '#ff4d6d';
                     ctx.lineWidth = 2.5;
                     ctx.setLineDash([5, 4]);
-                    ctx.moveTo(xAxis.left, y15);
-                    ctx.lineTo(xAxis.right, y15);
+                    ctx.moveTo(xAxis.left, y15Real);
+                    ctx.lineTo(xAxis.right, y15Real);
                     ctx.stroke();
                     ctx.setLineDash([]);
 
-                    drawLabelText("基準の１５℃ライン", textX, y15, '#ffe4e6', '#9f1239');
+                    drawLabelText("基準の１５℃ライン", textX, y15Real + 15, '#ffe4e6', '#9f1239'); 
 
                     const xJan = xAxis.getPixelForValue(0);
                     const yJan = yTemp.getPixelForValue(chart.data.datasets[1].data[0]);
-                    const lblY = yJan - 25;
+                    const lblY = yJan - 30; 
                     drawLabelText("冬でも１５℃以上！", textX, lblY, '#fffbeb', '#9a3412');
                     drawArrow(ctx, textX - 8, lblY, xJan + 12, yJan - 5, '#ff4d6d');
                 }
@@ -596,10 +657,6 @@
             quizQueue = JSON.parse(JSON.stringify(baseData));
             shuffleArray(quizQueue);
             
-            const b = document.getElementById("stage-display");
-            b.innerText = currentStage === 2 ? "セカンドステージ (高難度)" : "ファーストステージ";
-            b.style.background = currentStage === 2 ? "#fff9e6" : "#fff0f3";
-            
             currentQuestionIndex = 0; mistakeCount = 0; isFirstTimeSuccess = true;
             loadQuestion();
         }
@@ -607,9 +664,13 @@
         function loadQuestion() {
             document.getElementById("options-container").classList.remove("hidden");
             document.getElementById("explanation-area").classList.add("hidden");
+            
+            const heading = document.getElementById("question-heading");
+            const stageText = currentStage === 2 ? "2nd ステージ" : "1st ステージ";
+            heading.innerText = `${stageText}　第 ${currentQuestionIndex + 1} 問`;
+            heading.classList.remove("hidden");
 
             const data = quizQueue[currentQuestionIndex];
-            document.getElementById("question-number").innerText = `第 ${currentQuestionIndex + 1} 問`;
             
             const avg = (data.temps.reduce((s, t) => s + t, 0) / 12).toFixed(1);
             document.getElementById("average-temp").innerText = `年間の平均気温： ${avg} ℃`;
@@ -629,7 +690,7 @@
             myChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+                    labels: verticalMonths, 
                     datasets: [
                         { label: '降水量', data: data.precips, backgroundColor: 'rgba(89, 165, 216, 0.8)', borderColor: 'rgba(43, 108, 176, 1)', borderWidth: 1, yAxisID: 'y-precip', 
                           barPercentage: 1.0, categoryPercentage: 1.0, order: 2 }, 
@@ -640,13 +701,23 @@
                     animation: false, responsive: true, maintainAspectRatio: false,
                     layout: {
                         padding: {
-                            right: 110, // 出題時・解説時に関わらず、最初から余白幅を共通に固定（グラフ本体の伸縮を防ぐ）
-                            top: 15,
+                            right: 110, 
+                            top: 10,
                             left: 5,
                             bottom: 5
                         }
                     },
                     scales: {
+                        x: {
+                            ticks: {
+                                font: {
+                                    size: 10,
+                                    weight: 'bold'
+                                },
+                                maxRotation: 0, 
+                                minRotation: 0
+                            }
+                        },
                         'y-temp': { type: 'linear', position: 'left', min: -10, max: 35, ticks: { stepSize: 5 } },
                         'y-precip': { type: 'linear', position: 'right', min: 0, max: 400, grid: { drawOnChartArea: false }, ticks: { stepSize: 50 } }
                     },
@@ -666,19 +737,27 @@
             const data = quizQueue[currentQuestionIndex];
             const correct = (opt === data.climate);
 
-            // アノテーションをグラフに反映（アスペクト比やパディングは同一のまま！）
             myChart.options.plugins.customAnnotation = {
                 enabled: true,
                 type: data.climate
             };
             myChart.update();
 
+            document.getElementById("question-heading").classList.add("hidden");
+
             document.getElementById("options-container").classList.add("hidden");
             document.getElementById("explanation-area").classList.remove("hidden");
 
             const judge = document.getElementById("result-judge");
-            document.getElementById("answer-reveal").innerHTML = `${data.location} は <strong>「${data.climate}」</strong> だよ！`;
-            document.getElementById("main-point-text").innerText = data.mainPoint;
+            
+            // 特徴テキストのフォントを極限まで大きくし、結論を正式名称（〇〇の気候）の形で出力
+            const pointContainer = document.getElementById("main-point-container");
+            pointContainer.innerHTML = `
+                <p class="point-flow">${data.featureText}</p>
+                <p class="point-conclusion">${data.conclusionText}</p>
+                <p class="point-location">${data.location}</p>
+            `;
+            
             document.getElementById("explanation-text").innerText = data.explanation;
             
             const nextBtn = document.getElementById("next-btn");
