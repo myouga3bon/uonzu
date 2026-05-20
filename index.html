@@ -20,11 +20,11 @@
             --incorrect-bg: #eef7ff;
             --border-color: #ffd6df;
 
-            /* 「学習空間」のカラフルな色遣い */
-            --logo-gaku: #ff9f43; /* 鮮やかなオレンジ */
-            --logo-shu: #10b981;  /* 鮮やかなエメラルドグリーン */
-            --logo-ku: #3b82f6;   /* 鮮やかなブルー */
-            --logo-kan: #ff4d6d;  /* 鮮やかなピンク */
+            /* 「学習空間」のご指定に合わせたブランドカラー定義 */
+            --logo-gaku-bg: #3b82f6; /* 青 */
+            --logo-shu-bg: #ff9f43;  /* オレンジ */
+            --logo-ku-bg: #10b981;   /* 緑 */
+            --logo-kan-bg: #ff4d6d;  /* ピンク */
         }
 
         body {
@@ -56,22 +56,47 @@
             z-index: 10;
         }
 
-        .logo-text {
-            display: inline-block;
-            font-weight: 900;
-        }
-        .logo-gaku { color: var(--logo-gaku); }
-        .logo-shu { color: var(--logo-shu); }
-        .logo-ku { color: var(--logo-ku); }
-        .logo-kan { color: var(--logo-kan); }
-
-        h1 {
-            color: var(--dark-pink);
-            font-size: 22px;
+        /* スタート画面のタイトル2段組用スタイル */
+        .title-area {
             margin-top: 0;
             margin-bottom: 12px;
             border-bottom: 3px double var(--accent-pink);
-            padding-bottom: 8px;
+            padding-bottom: 12px;
+        }
+
+        /* 1段目：「学習空間」をカラフルな正方形の白抜き文字に配置 */
+        .logo-text-block {
+            display: flex;
+            justify-content: center;
+            gap: 6px; 
+            margin-bottom: 8px;
+        }
+
+        /* 4色の正方形ボックスの共通デザイン */
+        .logo-box {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 42px;
+            height: 42px;
+            font-size: 26px;
+            font-weight: 900;
+            color: #ffffff; 
+            border-radius: 8px; 
+            box-shadow: 0 3px 6px rgba(0,0,0,0.08); 
+        }
+        .logo-gaku-box { background-color: var(--logo-gaku-bg); }
+        .logo-shu-box { background-color: var(--logo-shu-bg); }
+        .logo-ku-box { background-color: var(--logo-ku-bg); }
+        .logo-kan-box { background-color: var(--logo-kan-bg); }
+
+        /* 2段目：「雨温図クイズ」の見出し */
+        .quiz-title-sub {
+            display: block;
+            color: var(--dark-pink);
+            font-size: 22px;
+            font-weight: bold;
+            margin: 0;
         }
 
         /* 問題ページ専用の見出し */
@@ -185,12 +210,12 @@
 
         .main-point-box {
             background-color: #fff2f4;
-            border: 3px dashed var(--accent-pink);
+            border: 1px solid var(--accent-pink);
             padding: 12px;
             border-radius: 14px;
             margin: 10px 0;
             text-align: center;
-            overflow: hidden; /* 子要素のはみ出しを防ぐ */
+            overflow: hidden; 
         }
 
         .main-point-title { 
@@ -202,9 +227,9 @@
             text-align: left;
         }
         
-        /* みやぶりポイント：基本サイズ22px、はみ出す場合はJS側で縮小をかけます */
+        /* みやぶりポイント（特徴） */
         .point-flow {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 900;
             color: var(--dark-pink);
             line-height: 1.4;
@@ -214,7 +239,7 @@
             width: fit-content;
         }
 
-        /* 気候名称（結論）のデザイン（同じ明るいピンク・20px） */
+        /* 気候名称（結論）のデザイン */
         .point-conclusion {
             font-size: 20px;
             font-weight: 900;
@@ -223,22 +248,36 @@
             margin-bottom: 4px;
         }
 
-        /* 都市名のデザイン（もっと薄い水色） */
+        /* 都市名フレックスコンテナ */
+        .point-location-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        /* 都市名 */
         .point-location {
             font-size: 20px;
             font-weight: bold;
             color: #4cc9f0; 
             margin: 0;
-            display: block;
+            flex-shrink: 0;
         }
 
-        /* 都道府県名を小さく表示するための独立スタイル */
+        /* 都道府県名 */
         .point-pref {
             font-size: 13px;
             font-weight: normal;
             color: #706062; 
+            flex-shrink: 0;
             display: inline-block;
-            margin-left: 2px;
+        }
+
+        .point-spacer-left {
+            flex-shrink: 0;
+            display: inline-block;
         }
 
         .explanation { background-color: #fcf8f9; border-left: 4px solid var(--accent-pink); padding: 8px 10px; text-align: left; margin-top: 8px; border-radius: 0 10px 10px 0; }
@@ -275,9 +314,15 @@
     <div class="container">
         <!-- スタート画面 -->
         <div id="start-screen">
-            <h1>
-                <span class="logo-text"><span class="logo-gaku">学</span><span class="logo-shu">習</span><span class="logo-ku">空</span><span class="logo-kan">間</span></span>　雨温図クイズ
-            </h1>
+            <div class="title-area">
+                <div class="logo-text-block">
+                    <span class="logo-box logo-gaku-box">学</span>
+                    <span class="logo-box logo-shu-box">習</span>
+                    <span class="logo-box logo-ku-box">空</span>
+                    <span class="logo-box logo-kan-box">間</span>
+                </div>
+                <h2 class="quiz-title-sub">雨温図クイズ</h2>
+            </div>
             <p>日本の気候区分に関するクイズだよ！<br>各地の雨温図を見て、正しい気候区分をえらぼう！</p>
             <button class="btn" onclick="startQuiz(1)">クイズをはじめる！</button>
         </div>
@@ -518,7 +563,7 @@
                     const y150 = yPrecip.getPixelForValue(150);
                     ctx.beginPath();
                     ctx.strokeStyle = '#38bdf8'; 
-                    ctx.lineWidth = 3.5;
+                    ctx.lineWidth = 1.5; 
                     ctx.moveTo(xAxis.left, y150);
                     ctx.lineTo(xAxis.right, y150);
                     ctx.stroke();
@@ -676,7 +721,8 @@
             document.getElementById("explanation-area").classList.add("hidden");
             
             const heading = document.getElementById("question-heading");
-            const stageText = currentStage === 2 ? "2nd ステージ" : "1st ステージ";
+            // 【変更】1st / 2ndの英語表記をご指定のカタカナ表記に完全差し替え
+            const stageText = currentStage === 2 ? "セカンドステージ" : "ファーストステージ";
             heading.innerText = `${stageText}　第 ${currentQuestionIndex + 1} 問`;
             heading.classList.remove("hidden");
 
@@ -764,21 +810,20 @@
             pointContainer.innerHTML = `
                 <p id="responsive-point-text" class="point-flow">${data.featureText}</p>
                 <p class="point-conclusion">${data.conclusionText}</p>
-                <p class="point-location">${data.location}<span class="point-pref">（${data.pref}）</span></p>
+                <div class="point-location-container">
+                    <span id="pref-mirror-spacer" class="point-spacer-left" style="color:transparent; font-size:13px; visibility:hidden; user-select:none;">（${data.pref}）</span>
+                    <p class="point-location">${data.location}</p>
+                    <span class="point-pref">（${data.pref}）</span>
+                </div>
             `;
             
-            // 【新機能】文字のはみ出しを検知してフォントサイズを自動縮小するフィッティング処理
-            // 描画が完了した直後に計算を行うため、setTimeout(0)を使用
             setTimeout(() => {
                 const el = document.getElementById("responsive-point-text");
-                const box = el.parentElement; // 点線で囲まれた親要素(.main-point-box)
+                const box = el.parentElement; 
                 if (el && box) {
-                    // 親要素の内側の最大許容幅を算出 (左右のpadding分24pxを差し引く)
                     const maxWidth = box.clientWidth - 24; 
-                    let currentFontSize = 22; // 初期フォントサイズ (22px)
+                    let currentFontSize = 20; 
                     
-                    // 文字の実際の横幅が親要素の許容幅を超えている間、ループでフォントを1pxずつ小さくする
-                    // 最低サイズは12pxまで
                     while (el.scrollWidth > maxWidth && currentFontSize > 12) {
                         currentFontSize--;
                         el.style.fontSize = currentFontSize + "px";
