@@ -190,6 +190,7 @@
             border-radius: 14px;
             margin: 10px 0;
             text-align: center;
+            overflow: hidden; /* 子要素のはみ出しを防ぐ */
         }
 
         .main-point-title { 
@@ -201,7 +202,7 @@
             text-align: left;
         }
         
-        /* みやぶりポイント（特徴）を同じ明るいピンク（--dark-pink）に設定 */
+        /* みやぶりポイント：基本サイズ22px、はみ出す場合はJS側で縮小をかけます */
         .point-flow {
             font-size: 22px;
             font-weight: 900;
@@ -209,9 +210,11 @@
             line-height: 1.4;
             margin: 0 auto 6px auto;
             white-space: nowrap; 
+            display: block;
+            width: fit-content;
         }
 
-        /* 気候名称を20pxにして、みやぶりポイントと同じ明るいピンクに統一 */
+        /* 気候名称（結論）のデザイン（同じ明るいピンク・20px） */
         .point-conclusion {
             font-size: 20px;
             font-weight: 900;
@@ -427,7 +430,7 @@
                 precips: [35, 45, 80, 90, 110, 170, 160, 90, 160, 95, 50, 45], 
                 featureText: "冬が暖かく、１年中 雨が少ない！",
                 conclusionText: "瀬戸内の気候",
-                explanation: "晴れの国として知られる岡山は, 冬でも約5℃と暖かいにも関わらず、降水量（特に winter と summer の山）が極めて小さいです。"
+                explanation: "晴れの国として知られる岡山は、冬でも約5℃と暖かいにも関わらず、降水量（特に winter と summer の山）が極めて小さいです。"
             },
             { 
                 location: "石垣島", pref: "沖縄県",
@@ -442,7 +445,6 @@
 
         const climateOptions = ["北海道の気候", "日本海側の気候", "太平洋側の気候", "中央高地の気候", "瀬戸内の気候", "南西諸島の気候"];
 
-        // グラフ横軸の日本語縦書きデータ
         const verticalMonths = [
             ['１', '月'], ['２', '月'], ['３', '月'], ['４', '月'], ['５', '月'], ['６', '月'],
             ['７', '月'], ['８', '月'], ['９', '月'], ['10', '月'], ['11', '月'], ['12', '月']
@@ -758,14 +760,32 @@
 
             const judge = document.getElementById("result-judge");
             
-            // みやぶりポイントと気候区分（conclusion）の色を同一の明るいピンク（var(--dark-pink)）に設定
             const pointContainer = document.getElementById("main-point-container");
             pointContainer.innerHTML = `
-                <p class="point-flow">${data.featureText}</p>
+                <p id="responsive-point-text" class="point-flow">${data.featureText}</p>
                 <p class="point-conclusion">${data.conclusionText}</p>
                 <p class="point-location">${data.location}<span class="point-pref">（${data.pref}）</span></p>
             `;
             
+            // 【新機能】文字のはみ出しを検知してフォントサイズを自動縮小するフィッティング処理
+            // 描画が完了した直後に計算を行うため、setTimeout(0)を使用
+            setTimeout(() => {
+                const el = document.getElementById("responsive-point-text");
+                const box = el.parentElement; // 点線で囲まれた親要素(.main-point-box)
+                if (el && box) {
+                    // 親要素の内側の最大許容幅を算出 (左右のpadding分24pxを差し引く)
+                    const maxWidth = box.clientWidth - 24; 
+                    let currentFontSize = 22; // 初期フォントサイズ (22px)
+                    
+                    // 文字の実際の横幅が親要素の許容幅を超えている間、ループでフォントを1pxずつ小さくする
+                    // 最低サイズは12pxまで
+                    while (el.scrollWidth > maxWidth && currentFontSize > 12) {
+                        currentFontSize--;
+                        el.style.fontSize = currentFontSize + "px";
+                    }
+                }
+            }, 0);
+
             document.getElementById("explanation-text").innerText = data.explanation;
             
             const nextBtn = document.getElementById("next-btn");
